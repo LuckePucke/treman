@@ -8,8 +8,8 @@ s.listen(10)
 while True:
 
     c, addr = s.accept()
-
-    c.send("sug min röv azco")
+    
+    c.send(str.encode("sug min röv azco"))
     c.close()
 
 
