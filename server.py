@@ -15,6 +15,8 @@ connectionCounter = 0
 def fConnections():
 	# Handles all connections.
 	# Inserts the connection into the connections directory with the address as the key.
+	global connections
+	global connectionCounter
 	while True:
 		try:
 			# First we accept the new connection
@@ -27,6 +29,7 @@ def fConnections():
 			print("We had a failed connection: %s", err)
 
 def fClientHandler(connectionID, c, addr):
+	global connections
 	with c:
 		while running:
 			data = c.recv(4096)
