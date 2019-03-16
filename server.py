@@ -51,7 +51,7 @@ def fClientHandler(connectionID, c, addr):
             print("\n#" + str(connectionID) + " Recieved:\n" + sData)
             method = sData.split("\n")[0]
             print("\n#" + str(connectionID) + " Method: " + method)
-            if method == "GET / HTTP/1.1":
+            if str(method) == "GET / HTTP/1.1":
                 c.send(str.encode(index))
             else:
                 c.send(str.encode("<html><body>This method is not yet implemented.</body></html>"))
