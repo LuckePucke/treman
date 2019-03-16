@@ -1,6 +1,14 @@
 import socket
 import threading
 
+# Read index file into memory
+try:
+    fIndex = open("index.html", "r")
+    index = fIndex.read()
+except:
+    print("couldn't open index.html")
+    sys.exit()
+
 # Setup the socket handling the HTTP requests.
 s = socket.socket()
 s.bind(("", 80))
@@ -31,16 +39,22 @@ def fConnections():
 def fClientHandler(connectionID, c, addr):
     global connections
     global running
+    global index
     with c:
         while running:
             data = c.recv(4096)
             if not data:
                 del connections[connectionID]
                 break
-            print("\n#" + str(connectionID) + " Recieved: " + bytes.decode(data))
-            c.send(str.encode( "<html><body>" + bytes.decode(data) + "</body></html>"))
+            sData = bytes.decode(data)
+            print("\n#" + str(connectionID) + " Recieved:\n" + sData)
+            method = sData.split("\n")[0]
+            if method == "GET / HTTP/1.1":
+                c.send(str.encode(index))
+            else:
+                c.send(str.encode("<html><body>This method is not yet implemented.</body></html>"))
 
-# Beginning of execution
+
 
 # Connection thread:		 reserved,	function,			name,		args, kwargs
 tConnections = threading.Thread(None, fConnections, "Connections thread", (), {})
