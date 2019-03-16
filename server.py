@@ -51,10 +51,10 @@ def fClientHandler(connectionID, c, addr):
             print("\n#" + str(connectionID) + " Recieved:\n" + sData)
             if "GET /" in sData:
                 c.send(str.encode(index))
-                c.send(str.encode("200"))
+                c.send(b'200')
             else:
                 c.send(str.encode("<html><body>This method is not yet implemented.</body></html>"))
-                c.send(str.encode("200"))
+                c.send(b'200')
 
 
 
