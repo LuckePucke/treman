@@ -19,7 +19,7 @@ def fConnections():
 		try:
 			# First we accept the new connection
 			c, addr = s.accept()
-			connections.update(connectionCounter = c)
+			connections.update({connectionCounter: c})
 			tNewClientHandler = threading.Thread(None, fClientHandler, None, (connectionCounter, c, addr), {})
 			tNewClientHandler.start()
 			connectionCounter += 1
