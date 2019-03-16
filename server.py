@@ -9,6 +9,7 @@ s.listen(10)
 # Global variables & constants
 running = True
 connections = {}
+connectionCounter = 0
 
 # Thread functions
 def fConnections():
@@ -18,18 +19,19 @@ def fConnections():
 		try:
 			# First we accept the new connection
 			c, addr = s.accept()
-			connections.update(addr = c)
-			tNewClientHandler = threading.Thread(None, fClientHandler, None, (c, addr), {})
+			connections.update(connectionCounter = c)
+			tNewClientHandler = threading.Thread(None, fClientHandler, None, (connectionCounter, c, addr), {})
 			tNewClientHandler.start()
+			connectionCounter += 1
 		except err:
 			print("We had a failed connection: %s", err)
 
-def fClientHandler(c, addr):
+def fClientHandler(connectionID, c, addr):
 	with c:
 		while running:
 			data = c.recv(4096)
 			if not data:
-				del connections[addr]
+				del connections[connectionID]
 				break
 			c.send(str.encode( "Du skickade: " + bytes.decode(data) ))
 
