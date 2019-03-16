@@ -37,8 +37,8 @@ def fClientHandler(connectionID, c, addr):
             if not data:
                 del connections[connectionID]
                 break
-            print("Recieved: " + str(data))
-            c.send(str.encode( "Du skickade: " + bytes.decode(data) ))
+            print("\n#" + str(connectionID) + " Recieved: " + str(data))
+            c.send(str.encode( "<html><body>" + bytes.decode(data) + "</body></html>"))
 
 # Beginning of execution
 
