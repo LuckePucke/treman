@@ -8,7 +8,7 @@ s.listen(10)
 
 # Global variables & constants
 running = True
-connections = []
+clientHandlers = []
 
 # Thread functions
 def fConnections():
@@ -16,13 +16,10 @@ def fConnections():
 		try:
 			c, addr = s.accept()
 			tNewClientHandler = threading.Thread(None, fClientHandler, None, (c, addr), {})
-			tNewClientHandler.daemon = True
-			connections.append((c, addr))
+			clientHandlers.append(tNewClientHandler)
 			tNewClientHandler.start()
 		except err:
 			print("We had a failed connection: %s", err)
-	for c, _ in connections:
-		c.close()
 
 def fClientHandler(c, addr):
 	with c:
@@ -37,7 +34,7 @@ def fClientHandler(c, addr):
 # Connection thread:         reserved,  function,           name,       args, kwargs
 tConnections = threading.Thread(None, fConnections, "Connections thread", (), {})
 tConnections.start()
-# TODO: modify running variable here.
+input("Press enter to shutdown the server.")
 tConnections.join()
 print("Safe program exit.")
 
