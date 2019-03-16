@@ -37,12 +37,12 @@ def fClientHandler(connectionID, c, addr):
             if not data:
                 del connections[connectionID]
                 break
-            print("\n#" + str(connectionID) + " Recieved: " + str(data))
+            print("\n#" + str(connectionID) + " Recieved: " + bytes.decode(data))
             c.send(str.encode( "<html><body>" + bytes.decode(data) + "</body></html>"))
 
 # Beginning of execution
 
-# Connection thread:         reserved,  function,           name,       args, kwargs
+# Connection thread:		 reserved,	function,			name,		args, kwargs
 tConnections = threading.Thread(None, fConnections, "Connections thread", (), {})
 tConnections.daemon = True
 tConnections.start()
