@@ -34,7 +34,7 @@ def fClientHandler(c, addr):
 # Connection thread:         reserved,  function,           name,       args, kwargs
 tConnections = threading.Thread(None, fConnections, "Connections thread", (), {})
 tConnections.start()
-input("Press enter to shutdown the server.")
+_ = input("Press enter to shutdown the server.")
 tConnections.join()
 print("Safe program exit.")
 
