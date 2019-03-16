@@ -27,10 +27,10 @@ def fConnections():
 def fClientHandler(c, addr):
 	with c:
 		while running:
-			data = bytes.decode(c.recv(4096))
+			data = c.recv(4096)
 			if not data:
 				break
-			c.send(str.encode("Du skickade: " + inp))
+			c.send(str.encode( "Du skickade: " + bytes.decode(data) ))
 
 # Beginning of execution
 
