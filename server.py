@@ -13,11 +13,14 @@ connections = []
 # Thread functions
 def fConnections():
 	while running:
-		c, addr = s.accept()
-		tNewClientHandler = threading.Thread(None, fClientHandler, None, (c, addr), {})
-		tNewClientHandler.daemon = True
-		connections.append(c, addr)
-		tNewClientHandler.start()
+		try:
+			c, addr = s.accept()
+			tNewClientHandler = threading.Thread(None, fClientHandler, None, (c, addr), {})
+			tNewClientHandler.daemon = True
+			connections.append((c, addr))
+			tNewClientHandler.start()
+		except err:
+			print("We had a failed connection: %s", err)
 	for c, _ in connections:
 		c.close()
 
