@@ -10,9 +10,6 @@ s.listen(10)
 running = True
 connections = []
 
-# Connection thread:         reserved,  function,           name,       args, kwargs
-tConnections = threading.Thread(None, fConnections, "Connections thread", (), {})
-
 # Thread functions
 def fConnections():
 	while running:
@@ -31,6 +28,8 @@ def fClientHandler(c, addr):
 
 # Beginning of execution
 
+# Connection thread:         reserved,  function,           name,       args, kwargs
+tConnections = threading.Thread(None, fConnections, "Connections thread", (), {})
 tConnections.start()
 # TODO: modify running variable here.
 tConnections.join()
