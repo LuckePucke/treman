@@ -66,5 +66,6 @@ _ = input("Press enter to shutdown the server.")
 running = False
 for addr, c in connections.items():
     c.close()
+s.close()
 print("Safe program exit.")
 
