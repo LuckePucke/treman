@@ -50,17 +50,9 @@ def fClientHandler(connectionID, c, addr):
             sData = bytes.decode(data)
             print("\n#" + str(connectionID) + " Recieved:\n" + sData)
             if "GET /" in sData:
-                c.send(str.encode(index))
-                try:
-                    c.send(200)
-                except:
-                    pass
+                c.send(str.encode("HTTP/1.1 200 OK\n\n" + index))
             else:
                 c.send(str.encode("<html><body>This method is not yet implemented.</body></html>"))
-                try:
-                    c.send(200)
-                except:
-                    pass
 
 
 
