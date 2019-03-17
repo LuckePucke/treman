@@ -20,6 +20,9 @@ running = True
 connections = {}
 connectionCounter = 0
 
+def responseHeader():
+    return "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Type: text/html; charset=UTF-8\nContent-Length: 138\nLast-Modified: Wed, 08 Jan 2003 23:11:55 GMT\nServer: Python/3.5.3 (Unix) (Raspbian 2018-11-13)\nETag: \"3f80f-1b6-3e1cb03b\"\nAccept-Ranges: bytes\nConnection: close\n\n"
+
 # Thread functions
 def fConnections():
     # Handles all connections.
@@ -50,7 +53,7 @@ def fClientHandler(connectionID, c, addr):
             sData = bytes.decode(data)
             print("\n#" + str(connectionID) + " Recieved:\n" + sData)
             if "GET /" in sData:
-                c.send(str.encode("HTTP/1.1 200 OK\n\n" + index))
+                c.send(str.encode(responseHeader() + index))
             else:
                 c.send(str.encode("<html><body>This method is not yet implemented.</body></html>"))
 
