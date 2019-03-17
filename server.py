@@ -21,7 +21,7 @@ connections = {}
 connectionCounter = 0
 
 def responseHeader():
-    return "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Type: text/html; charset=UTF-8\nContent-Length: 138\nLast-Modified: Wed, 08 Jan 2003 23:11:55 GMT\nServer: Python/3.5.3 (Unix) (Raspbian 2018-11-13)\nETag: \"3f80f-1b6-3e1cb03b\"\nAccept-Ranges: bytes\nConnection: close\n\n"
+    return "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Type: text/html; charset=UTF-8\nContent-Length: 138\nLast-Modified: Wed, 08 Jan 2003 23:11:55 GMT\nServer: Python/3.5.3 (Unix) (Raspbian 2018-11-13)\nETag: \"3f80f-1b6-3e1cb03b\"\nAccept-Ranges: bytes\nConnection: open\n\n"
 
 # Thread functions
 def fConnections():
