@@ -52,13 +52,13 @@ def fClientHandler(connectionID, c, addr):
             if "GET /" in sData:
                 c.send(str.encode(index))
                 try:
-                    c.send(1337)
+                    c.send(200)
                 except:
                     pass
             else:
                 c.send(str.encode("<html><body>This method is not yet implemented.</body></html>"))
                 try:
-                    c.send(1337)
+                    c.send(200)
                 except:
                     pass
 
