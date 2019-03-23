@@ -1,6 +1,8 @@
 import socket
 import threading
 import sys
+import time
+import random
 
 # Read index file into memory
 try:
@@ -19,9 +21,11 @@ s.listen(10)
 running = True
 connections = {}
 connectionCounter = 0
+rooms = {}
 
-def responseHeader():
-    return "HTTP/1.1 200 OK\nDate: Mon, 23 May 2005 22:38:34 GMT\nContent-Type: text/html; charset=UTF-8\nContent-Length: 138\nLast-Modified: Wed, 08 Jan 2003 23:11:55 GMT\nServer: Python/3.5.3 (Unix) (Raspbian 2018-11-13)\nETag: \"3f80f-1b6-3e1cb03b\"\nAccept-Ranges: bytes\nConnection: open\n\n"
+def responseHeader(len):
+    
+    return "HTTP/1.1 200 OK\nDate: " + time.strftime("%a, %d %b %Y %H:%M:%S %Z") + "\nContent-Type: text/html; charset=UTF-8\nContent-Length: " + str(len) + "\nLast-Modified: " + time.strftime("%a, %d %b %Y %H:%M:%S %Z") + "\nServer: Python/3.5.3 (Unix) (Raspbian 2018-11-13)\nETag: \"" + time.strftime("%a %d %b %Y %H %M %S") + "\"\nAccept-Ranges: bytes\nConnection: close\n\n"
 
 # Thread functions
 def fConnections():
@@ -40,22 +44,62 @@ def fConnections():
         except err:
             print("We had a failed connection: %s", err)
 
+class room(object):
+    def __init__(self):
+        self.diceA = 0
+        self.diceB = 0
+    def roll(self):
+        self.diceA = random.choice([1, 2, 3, 4, 5, 6])
+        self.diceB = random.choice([1, 2, 3, 4, 5, 6])
+    def dice(self):
+        return str(self.diceA) + " " + str(self.diceB)
+
 def fClientHandler(connectionID, c, addr):
     global connections
+    global rooms
     global running
     global index
     with c:
         while running:
             data = c.recv(4096)
             if not data:
+                c.close()
                 del connections[connectionID]
                 break
             sData = bytes.decode(data)
             print("\n#" + str(connectionID) + " Recieved:\n" + sData)
-            if "GET /" in sData:
-                c.send(str.encode(responseHeader() + index))
+            if "text/html" not in sData:
+                c.send(str.encode("HTTP 404 Not found"))
+                c.close()
+                del connections[connectionID]
+                break
+            if "GET /treman HTTP" in sData:
+                c.send(str.encode(responseHeader(len(index)) + index))
+            elif "GET /treman?roomCode=" in sData:
+                roomCode = sData[21:25]
+                if roomCode not in rooms:
+                    rooms.update({roomCode: room()})
+                page = "<html><body>\n"
+                page += rooms[roomCode].dice()
+                page += "\n<form action=\"/treman\" method=\"GET\"><input type=\"submit\" name=\""+ roomCode +"\" value=\"Roll\"></form>"
+                page += "\n<form action=\"/treman\" method=\"GET\"><input type=\"submit\" name=\""+ roomCode +"\" value=\"Update\"></form>"
+                page += "\n</body></html>"
+                c.send(str.encode(responseHeader(len(page)) + page))
+            elif "GET /treman?" in sData:
+                roomCode = sData[12:16]
+                if sData[17:21] == "Roll":
+                    rooms[roomCode].roll()
+                page = "<html><body>\n"
+                page += rooms[roomCode].dice()
+                page += "\n<form action=\"/treman\" method=\"GET\"><input type=\"submit\" name=\""+ roomCode +"\" value=\"Roll\"></form>"
+                page += "\n<form action=\"/treman\" method=\"GET\"><input type=\"submit\" name=\""+ roomCode +"\" value=\"Update\"></form>"
+                page += "\n</body></html>"
+                c.send(str.encode(responseHeader(len(page)) + page))
             else:
-                c.send(str.encode("<html><body>This method is not yet implemented.</body></html>"))
+                c.send(str.encode("HTTP 404 Not found"))
+                c.close()
+                del connections[connectionID]
+                break
 
 
 
